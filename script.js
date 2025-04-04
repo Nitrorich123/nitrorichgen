@@ -1,3 +1,12 @@
+function generateNitroCode(length = 16) {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < length; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `https://discord.gift/${code}`;
+}
+
 async function sendNitroEmbed() {
   const webhookUrl = document.getElementById('webhookUrl').value.trim();
   const count = parseInt(document.getElementById('messageCount').value);
@@ -12,23 +21,23 @@ async function sendNitroEmbed() {
     return;
   }
 
-  const embed = {
-    title: "NITRORICH NITRO GEN!",
-    description: "here is your free nitro code:)\n\nhttps://discord.gift/abcd1234efgh5678",
-    color: 0x9b59b6,
-    author: {
-      name: "MADE BY NITRORICH"
-    },
-    footer: {
-      text: "check the file:)"
-    }
-  };
-
-  const payload = {
-    embeds: [embed]
-  };
-
   for (let i = 0; i < count; i++) {
+    const embed = {
+      title: "NITRORICH NITRO GEN!",
+      description: `here is your free nitro code:)\n\n${generateNitroCode()}`,
+      color: 0x9b59b6,
+      author: {
+        name: "MADE BY NITRORICH"
+      },
+      footer: {
+        text: "check the file:)"
+      }
+    };
+
+    const payload = {
+      embeds: [embed]
+    };
+
     try {
       await fetch(webhookUrl, {
         method: "POST",
@@ -44,7 +53,7 @@ async function sendNitroEmbed() {
       break;
     }
 
-    await new Promise(res => setTimeout(res, 500)); // delay to avoid rate limits
+    await new Promise(res => setTimeout(res, 500));
   }
 
   alert(`Sent ${count} embed message(s)!`);
